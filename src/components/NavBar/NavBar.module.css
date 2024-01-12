@@ -1,0 +1,25 @@
+* {
+  padding: 0%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(217, 218, 227, 0.3);
+  backdrop-filter: 10px;
+  align-items: center;
+  height: 4rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 1rem;
+  color: black;
+  border-radius: 6px;
+}
+
+.logo {
+  left: 2rem;
+  font-family: sans-serif;
+}
