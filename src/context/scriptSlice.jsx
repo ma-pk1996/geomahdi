@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { mapData : "leafletContainer.pm.setGlobalOptions({ pmIgnore: false });", scriptData: "" }
+const initialState = { mapData : "", scriptData: "" }
 
 export const scriptSlice = createSlice({
     name: 'script',
