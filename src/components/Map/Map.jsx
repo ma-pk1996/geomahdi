@@ -1,11 +1,24 @@
 import classes from "./Map.module.css";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
 import { Geoman } from "../Geoman/Geoman";
+
 
 export const Map = () => {
   const position = [48.863247, 2.350747];
   const zoomLv = 13;
+
+  
+
+  // const MapComponent = () => {
+  //   const map = useMap();
+
+  //   const geojsonLayer = L.geoJSON(geojsonData);
+  //   geojsonLayer.addTo(map);
+
+  //   return null;
+  // };
+
 
   return (
     <div className={classes.container}>

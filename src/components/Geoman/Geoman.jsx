@@ -4,11 +4,64 @@ import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { useDispatch, useSelector } from "react-redux";
 import { scriptAction } from "../../context/scriptSlice";
+import L from "leaflet";
+
+
 
 export const Geoman = () => {
   const context = useLeafletContext();
   const leafletContainer = context.layerContainer || context.map;
   let shape;
+  let geojsonLayer;
+  let geojsonPmLayer;
+  const geojsonData = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [2.326678, 48.862116],
+            [2.322237, 48.86607],
+            [2.327193, 48.870021],
+          ],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [2.354649, 48.841445],
+              [2.336116, 48.843366],
+              [2.34933, 48.849579],
+              [2.354649, 48.841445],
+            ],
+          ],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [2.344696, 48.881085],
+              [2.344696, 48.886842],
+              [2.352762, 48.886842],
+              [2.352762, 48.881085],
+              [2.344696, 48.881085],
+            ],
+          ],
+        },
+      },
+    ],
+  }
   leafletContainer.pm.addControls({
     drawMarker: false,
   });
@@ -39,10 +92,9 @@ export const Geoman = () => {
 
   function fetchi(data) {
     if(data.length !== 0) {
-      dispatch(scriptAction.setMapData(data));
+      dispatch(scriptAction.setMapData(JSON.parse(data)));
       console.log("dispatched", typeof data);
     }
-    console.log(data);
   }
 
   useEffect(() => {
@@ -64,6 +116,19 @@ export const Geoman = () => {
           console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
         });
       }
+    });
+    if(!geojsonLayer) {
+      geojsonLayer = L.geoJSON(geojsonData);
+      geojsonLayer.addTo(leafletContainer);
+    }
+    geojsonPmLayer =  geojsonLayer.getLayers()[0];
+    geojsonPmLayer.pm.enable()
+    geojsonLayer.eachLayer((layer) => {
+      layer.pm.enable()
+    })
+    geojsonPmLayer.on("pm:edit", (e) => {
+      const event = e;
+      console.log(geojsonLayer.toGeoJSON());
     });
 
     return () => {
