@@ -5,18 +5,21 @@ const initialState = {
     type: "FeatureCollection",
     features: [],
   },
-  scriptData: "",
+  scriptData: {
+    type: "FeatureCollection",
+    features: [],
+  }
 };
 
 export const scriptSlice = createSlice({
   name: "script",
   initialState,
   reducers: {
-    setMapData(state) {
-      state.mapData = state.mapData;
+    setMapData(state, action) {
+      state.mapData = action.payload;
     },
-    setScriptData(state) {
-      state.scriptData = state.scriptData;
+    setScriptData(state, action) {
+      state.scriptData = action.payload;
     },
   },
 });

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SideBar.css";
-import { LiveScript } from "../CodeMirror/LiveScript";
+import { LiveScript } from "./CodeMirror/LiveScript";
 
 
 const Sidebar = () => {

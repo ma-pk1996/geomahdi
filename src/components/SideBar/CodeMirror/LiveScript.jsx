@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MonacoEditor from "react-monaco-editor";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useDispatch, useSelector } from "react-redux";
-import { scriptAction } from "../../context/scriptSlice";
+import { scriptAction } from "../../../context/scriptSlice";
 import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
 
 export function LiveScript() {
@@ -14,7 +14,7 @@ export function LiveScript() {
 
   function onChange(value, e) {
     dispatch(scriptAction.setScriptData(`${value}`));
-    console.log('change');
+    console.log(value);
   }
   
 
