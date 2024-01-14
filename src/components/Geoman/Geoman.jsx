@@ -10,6 +10,54 @@ import L from "leaflet";
 
 export const Geoman = () => {
   const context = useLeafletContext();
+  const geojsonData = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [2.326678, 48.862116],
+            [2.322237, 48.86607],
+            [2.327193, 48.870021],
+          ],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [2.354649, 48.841445],
+              [2.336116, 48.843366],
+              [2.34933, 48.849579],
+              [2.354649, 48.841445],
+            ],
+          ],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [2.344696, 48.881085],
+              [2.344696, 48.886842],
+              [2.352762, 48.886842],
+              [2.352762, 48.881085],
+              [2.344696, 48.881085],
+            ],
+          ],
+        },
+      },
+    ],
+  };
   let geojsonLayer;
   let geojsonPmLayer;
   let jsoni = "";
@@ -33,7 +81,7 @@ export const Geoman = () => {
     leafletContainer.pm.setGlobalOptions({ pmIgnore: false });
     leafletContainer.on("pm:create", (e) => {
       if (e.layer && e.layer.pm) {
-        const shape = e;
+        let shape = e;
         jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
         fetchi(jsoni)
         leafletContainer.pm
@@ -42,7 +90,8 @@ export const Geoman = () => {
           shape.layer.pm.enable();
           shape.layer.on("pm:edit", (e) => {
           const event = e;
-          console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
+          jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
+          fetchi(jsoni)
         });
       }
     });
@@ -57,22 +106,24 @@ export const Geoman = () => {
     })
     geojsonPmLayer.on("pm:edit", (e) => {
       const event = e;
-      console.log(geojsonLayer.toGeoJSON());
+      jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
+      fetchi(jsoni)
     });
 
     leafletContainer.on("pm:remove", (e) => {
       console.log("object removed");
-      console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
+      jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
+      fetchi(jsoni)
     });
 
     return () => {
-      geojsonPmLayer.off("pm:edit")
-      shape.layer.off("pm:edit")
+      // geojsonPmLayer.off("pm:edit")
+      leafletContainer.off("pm:edit")
       leafletContainer.off("pm:create")
       leafletContainer.pm.removeControls();
       leafletContainer.pm.setGlobalOptions({ pmIgnore: true });
     };
-  }, [context]);
+  }, [context, scriptData]);
   
   function fetchi(data) {
     if(data.length !== 0) {

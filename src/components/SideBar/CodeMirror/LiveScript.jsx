@@ -13,8 +13,7 @@ export function LiveScript() {
   const dispatch = useDispatch();
 
   function onChange(value, e) {
-    dispatch(scriptAction.setScriptData(`${value}`));
-    console.log(value);
+    dispatch(scriptAction.setScriptData(value));
   }
   
 
