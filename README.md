@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Getting Started with Geomahdi App
 
 This project is about creating and working with goejson and shapes on leaflet with help of lealfet-geoman package for react
 
