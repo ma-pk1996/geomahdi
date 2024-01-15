@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
 import MonacoEditor from "react-monaco-editor";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useDispatch, useSelector } from "react-redux";
-import { scriptAction } from "../../../context/scriptSlice";
+import { scriptAction } from "../../../context";
 import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
+
 
 export function LiveScript() {
   const mapdata = useSelector((state) => state.script.mapData);
-  useEffect(() => {
-    console.log(mapdata)
-  }, [mapdata])
+  const theme = useSelector(state => state.theme.lightTheme);
+
   const dispatch = useDispatch();
+  
+  
 
   function onChange(value, e) {
-    dispatch(scriptAction.setScriptData(value));
+    dispatch(scriptAction.setScriptData(JSON.parse(value)));
   }
   
 
   return (
-    <div style={{ width: "290px", height: "450px" }}>
+    <div style={{ width: "290px", height: "450px", borderRadius: "8px" }}>
       <MonacoEditor
         language="javascript"
-        theme="vs-light"
+        theme={theme ? "vs" : "vs-dark"}
         value={JSON.stringify(mapdata, null, 2)}
         options={{
           automaticLayout: true,

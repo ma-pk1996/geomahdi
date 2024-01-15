@@ -9,17 +9,33 @@
   left: 0;
   display: flex;
   justify-content: space-between;
-  background-color: rgba(217, 218, 227, 0.3);
+  background-color: rgb(85, 108, 130);
   backdrop-filter: 10px;
   align-items: center;
   height: 4rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0 1rem;
-  color: black;
-  border-radius: 6px;
+  color: rgb(255, 255, 255);
+  border-bottom: 1px solid green;
 }
 
 .logo {
-  left: 2rem;
+  margin-left: 1rem;
   font-family: sans-serif;
+}
+
+.themeBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin-right: 2rem;
+  color: gold;
+}
+
+.themeBtnd {
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin-right: 2rem;
+  color: rgb(201, 199, 199);
 }

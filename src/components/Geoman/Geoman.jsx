@@ -1,83 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLeafletContext } from "@react-leaflet/core";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { useDispatch, useSelector } from "react-redux";
-import { scriptAction } from "../../context/scriptSlice";
+import { scriptAction } from "../../context";
 import L from "leaflet";
 
 
 
-export const Geoman = () => {
+export function Geoman() {
   const context = useLeafletContext();
-  const geojsonData = {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "LineString",
-          coordinates: [
-            [2.326678, 48.862116],
-            [2.322237, 48.86607],
-            [2.327193, 48.870021],
-          ],
-        },
-      },
-      {
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "Polygon",
-          coordinates: [
-            [
-              [2.354649, 48.841445],
-              [2.336116, 48.843366],
-              [2.34933, 48.849579],
-              [2.354649, 48.841445],
-            ],
-          ],
-        },
-      },
-      {
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "Polygon",
-          coordinates: [
-            [
-              [2.344696, 48.881085],
-              [2.344696, 48.886842],
-              [2.352762, 48.886842],
-              [2.352762, 48.881085],
-              [2.344696, 48.881085],
-            ],
-          ],
-        },
-      },
-    ],
-  };
-  let geojsonLayer;
-  let geojsonPmLayer;
-  let jsoni = "";
-
+  
   const dispatch = useDispatch();
   const scriptData = useSelector((state) => state.script.scriptData);
 
-
   useEffect(() => {
-    console.log(scriptData);
-  }, [scriptData]);
-  
-
-  useEffect(() => {
-
+    let jsoni = "";
     const leafletContainer = context.layerContainer || context.map;
     leafletContainer.pm.addControls({
       drawMarker: false,
     });
-
     leafletContainer.pm.setGlobalOptions({ pmIgnore: false });
     leafletContainer.on("pm:create", (e) => {
       if (e.layer && e.layer.pm) {
@@ -86,7 +28,7 @@ export const Geoman = () => {
         fetchi(jsoni)
         leafletContainer.pm
           .getGeomanLayers()
-          .map((layer, index) => layer.bindPopup(`I am figure N° ${index}`));
+          .map((layer, index) => layer.bindPopup(`I am figure N° ${index}`))
           shape.layer.pm.enable();
           shape.layer.on("pm:edit", (e) => {
           const event = e;
@@ -95,19 +37,20 @@ export const Geoman = () => {
         });
       }
     });
-    if(!geojsonLayer) {
-      geojsonLayer = L.geoJSON(geojsonData);
-      geojsonLayer.addTo(leafletContainer);
+    
+    const geojsonLayer = L.geoJSON().addTo(leafletContainer);
+    
+    if(geojsonLayer) {
+      geojsonLayer.addData(scriptData);
     }
-    geojsonPmLayer =  geojsonLayer.getLayers()[0];
-    geojsonPmLayer.pm.enable()
+    
     geojsonLayer.eachLayer((layer) => {
-      layer.pm.enable()
-    })
-    geojsonPmLayer.on("pm:edit", (e) => {
-      const event = e;
-      jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
-      fetchi(jsoni)
+      layer.pm.enable();
+      layer.on("pm:edit", (e) => {
+        const event = e;
+        jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
+        fetchi(jsoni);
+      });
     });
 
     leafletContainer.on("pm:remove", (e) => {
@@ -117,7 +60,7 @@ export const Geoman = () => {
     });
 
     return () => {
-      // geojsonPmLayer.off("pm:edit")
+      leafletContainer.removeLayer(geojsonLayer);
       leafletContainer.off("pm:edit")
       leafletContainer.off("pm:create")
       leafletContainer.pm.removeControls();

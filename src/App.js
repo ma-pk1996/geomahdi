@@ -1,19 +1,17 @@
-import './App.css';
-import { Map } from './components/Map/Map';
-import { Navbar } from './components/NavBar/NavBar';
-import Sidebar from './components/SideBar/SideBar';
+import { Map } from "./components/Map";
+import { Navbar } from "./components/NavBar";
+import { SideBar } from "./components/SideBar";
+
+
 
 function App() {
-  
-
   return (
     <>
-    <Navbar />
-    <Sidebar />
-    <Map />
+      <Navbar />
+      <SideBar />
+      <Map />
     </>
   );
 }
 
 export default App;
-
