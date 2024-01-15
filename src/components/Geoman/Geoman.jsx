@@ -41,6 +41,7 @@ export function Geoman() {
     const geojsonLayer = L.geoJSON().addTo(leafletContainer);
     
     if(geojsonLayer) {
+      geojsonLayer.clearLayers();
       geojsonLayer.addData(scriptData);
     }
     
