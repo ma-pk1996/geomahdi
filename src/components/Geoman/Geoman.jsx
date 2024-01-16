@@ -13,7 +13,7 @@ export function Geoman() {
   
   const dispatch = useDispatch();
   const scriptData = useSelector((state) => state.script.scriptData);
-
+  let geojsonLayer = null;
   useEffect(() => {
 
     let jsoni = "";
@@ -50,12 +50,10 @@ export function Geoman() {
 
     //adding new layer from liveScript
 
-    const geojsonLayer = L.geoJSON().addTo(leafletContainer);
     
-    if(geojsonLayer) {
-      geojsonLayer.eachLayer((layer) => {
-        geojsonLayer.removeLayer(layer);
-      })
+    
+    if(!geojsonLayer) {
+      geojsonLayer = L.geoJSON().addTo(leafletContainer);
       geojsonLayer.addData(scriptData);
     }
     
@@ -67,7 +65,7 @@ export function Geoman() {
         fetchi(jsoni);
       });
     });
-    
+
     //
 
     return () => {
