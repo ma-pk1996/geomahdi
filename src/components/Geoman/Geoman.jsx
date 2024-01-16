@@ -15,12 +15,16 @@ export function Geoman() {
   const scriptData = useSelector((state) => state.script.scriptData);
 
   useEffect(() => {
+
     let jsoni = "";
+
     const leafletContainer = context.layerContainer || context.map;
     leafletContainer.pm.addControls({
       drawMarker: false,
     });
+
     leafletContainer.pm.setGlobalOptions({ pmIgnore: false });
+
     leafletContainer.on("pm:create", (e) => {
       if (e.layer && e.layer.pm) {
         let shape = e;
@@ -38,10 +42,20 @@ export function Geoman() {
       }
     });
     
+    leafletContainer.on("pm:remove", (e) => {
+      console.log("object removed");
+      jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
+      fetchi(jsoni)
+    });
+
+    //adding new layer from liveScript
+
     const geojsonLayer = L.geoJSON().addTo(leafletContainer);
     
     if(geojsonLayer) {
-      geojsonLayer.clearLayers();
+      geojsonLayer.eachLayer((layer) => {
+        geojsonLayer.removeLayer(layer);
+      })
       geojsonLayer.addData(scriptData);
     }
     
@@ -53,14 +67,13 @@ export function Geoman() {
         fetchi(jsoni);
       });
     });
-
-    leafletContainer.on("pm:remove", (e) => {
-      console.log("object removed");
-      jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
-      fetchi(jsoni)
-    });
+    
+    //
 
     return () => {
+      geojsonLayer.eachLayer((layer) => {
+        layer.off("pm:edit");
+      })
       leafletContainer.removeLayer(geojsonLayer);
       leafletContainer.off("pm:edit")
       leafletContainer.off("pm:create")

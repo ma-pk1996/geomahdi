@@ -10,7 +10,6 @@ export function Map() {
   const theme = useSelector((state) => state.theme.lightTheme);
   const position = [48.863247, 2.350747];
   const zoomLv = 13;
-  const scriptData = useSelector((state) => state.script.scriptData);
   const light = "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png";
   const dark =
     "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png";
@@ -35,7 +34,7 @@ export function Map() {
           attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           maxZoom={20}
         />
-        <Geoman key={JSON.stringify(scriptData)} />
+        <Geoman />
       </MapContainer>
     </div>
   );
