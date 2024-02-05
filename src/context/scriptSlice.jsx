@@ -15,10 +15,10 @@ export const scriptSlice = createSlice({
   name: "script",
   initialState,
   reducers: {
-    setMapData(state, action) {
+    setLiveScriptJson(state, action) {
       state.mapData = action.payload;
     },
-    setScriptData(state, action) {
+    setGeomanJson(state, action) {
       state.scriptData = action.payload;
     },
   },

@@ -13,7 +13,7 @@ export function LiveScript() {
   
 
   function onChange(value, e) {
-    dispatch(scriptAction.setScriptData(JSON.parse(value)));
+    dispatch(scriptAction.setGeomanJson(JSON.parse(value)));
   }
   
 

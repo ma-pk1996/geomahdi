@@ -5,7 +5,7 @@ import { LiveScript } from "./LiveScript";
 
 export function SideBar() {
   const [isVisible, setIsVisible] = useState(true);
-  const geojson = useSelector((state) => state.script.scriptData);
+  const geojson = useSelector((state) => state.script.mapData);
   const toggleSidebar = () => {
     setIsVisible(!isVisible);
   };

@@ -6,86 +6,92 @@ import { useDispatch, useSelector } from "react-redux";
 import { scriptAction } from "../../context";
 import L from "leaflet";
 
-
-
 export function Geoman() {
   const context = useLeafletContext();
-  
   const dispatch = useDispatch();
   const scriptData = useSelector((state) => state.script.scriptData);
   let geojsonLayer = null;
-  useEffect(() => {
 
-    let jsoni = "";
+  useEffect(() => {
+    let jsonData = "";
 
     const leafletContainer = context.layerContainer || context.map;
     leafletContainer.pm.addControls({
-      drawMarker: false,
+      drawMarker: {
+        icon : L.icon({
+          iconUrl: require("../../assets/mapmarker.png"),
+          iconSize : [30, 30],
+          iconAnchor : [10, 35]
+        })
+      },
     });
-
+    
     leafletContainer.pm.setGlobalOptions({ pmIgnore: false });
 
     leafletContainer.on("pm:create", (e) => {
       if (e.layer && e.layer.pm) {
         let shape = e;
-        jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
-        fetchi(jsoni)
+        jsonData = JSON.stringify(
+          leafletContainer.pm.getGeomanLayers(true, true).toGeoJSON()
+        );
+        fetchJsonHandler(jsonData);
         leafletContainer.pm
           .getGeomanLayers()
-          .map((layer, index) => layer.bindPopup(`I am figure N° ${index}`))
-          shape.layer.pm.enable();
-          shape.layer.on("pm:edit", (e) => {
+          .map((layer, index) => layer.bindPopup(`I am figure N° ${index}`));
+        shape.layer.pm.enable();
+        shape.layer.on("pm:edit", (e) => {
           const event = e;
-          jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
-          fetchi(jsoni)
+          jsonData = JSON.stringify(
+            leafletContainer.pm.getGeomanLayers(true, true).toGeoJSON()
+          );
+          fetchJsonHandler(jsonData);
         });
       }
     });
-    
+
     leafletContainer.on("pm:remove", (e) => {
       console.log("object removed");
-      jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON())
-      fetchi(jsoni)
+      jsonData = JSON.stringify(
+        leafletContainer.pm.getGeomanLayers(true, true).toGeoJSON()
+      );
+      fetchJsonHandler(jsonData);
     });
 
-    //adding new layer from liveScript
-
-    
-    
-    if(!geojsonLayer) {
+    if (!geojsonLayer) {
       geojsonLayer = L.geoJSON().addTo(leafletContainer);
-      geojsonLayer.addData(scriptData);
     }
-    
+
     geojsonLayer.eachLayer((layer) => {
-      layer.pm.enable();
+      leafletContainer.pm.disableLayer(layer);
+      leafletContainer.pm.addLayer(layer);
       layer.on("pm:edit", (e) => {
         const event = e;
-        jsoni = JSON.stringify(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
-        fetchi(jsoni);
+        jsonData = JSON.stringify(
+          leafletContainer.pm.getGeomanLayers(true, true).toGeoJSON()
+        );
+        fetchJsonHandler(jsonData);
       });
     });
 
-    //
+    if (scriptData) {
+      geojsonLayer.clearLayers();
+      geojsonLayer.addData(scriptData);
+    }
 
     return () => {
       geojsonLayer.eachLayer((layer) => {
         layer.off("pm:edit");
-      })
-      leafletContainer.removeLayer(geojsonLayer);
-      leafletContainer.off("pm:edit")
-      leafletContainer.off("pm:create")
+      });
       leafletContainer.pm.removeControls();
       leafletContainer.pm.setGlobalOptions({ pmIgnore: true });
     };
   }, [context, scriptData]);
-  
-  function fetchi(data) {
-    if(data.length !== 0) {
-      dispatch(scriptAction.setMapData(JSON.parse(data)));
+
+  function fetchJsonHandler(data) {
+    if (data.length !== 0) {
+      dispatch(scriptAction.setLiveScriptJson(JSON.parse(data)));
     }
   }
-  
 
   return null;
-};
+}
